@@ -1,0 +1,31 @@
+
+name: Free Windows 16GB Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 30
+
+    steps:
+      - name: Check Windows System
+        shell: pwsh
+        run: |
+          Write-Host "Windows System Information"
+
+          Get-CimInstance Win32_OperatingSystem |
+            Select-Object Caption, Version
+
+          Write-Host "CPU:"
+          Get-CimInstance Win32_Processor |
+            Select-Object Name, NumberOfCores
+
+          Write-Host "RAM:"
+          $ram = Get-CimInstance Win32_ComputerSystem
+          Write-Host ("RAM: {0:N2} GB" -f
+            ($ram.TotalPhysicalMemory / 1GB))
+
+          Write-Host "Disk:"
+          Get-PSDrive C
